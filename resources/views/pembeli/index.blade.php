@@ -54,8 +54,10 @@
             <input type="text" id="total_harga" name="total_harga" class="border p-2 bg-gray-100"
                 placeholder="Total harga" readonly>
 
-            <input type="date" name="tanggal_pembelian" class="border p-2" required
-                value="{{ old('tanggal_pembelian') }}">
+            <input type="date" name="tanggal_pembelian" class="border p-2 rounded"
+                value="{{ old('tanggal_pembelian', now()->format('Y-m-d')) }}" min="{{ now()->format('Y-m-d') }}"
+                onkeydown="return false" required>
+
         </div>
 
         <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>

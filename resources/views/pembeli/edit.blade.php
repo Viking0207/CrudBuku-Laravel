@@ -25,20 +25,26 @@
         @method('PUT')
 
         <div class="grid grid-cols-2 gap-4">
-            <input type="text" name="nama" placeholder="Nama Pembeli" class="border p-2"
+            <input type="text" name="nama" placeholder="Nama Pembeli" class="border p-2 rounded"
                 value="{{ old('nama', $pembeli->nama) }}" required>
 
-            <select name="buku_id" class="border p-2" required>
+            <select name="buku_id" class="border p-2 rounded" required>
                 <option value="">-- Pilih Buku --</option>
                 @foreach ($bukus as $buku)
-                    <option value="{{ $buku->id }}" {{ old('buku_id', $pembeli->buku_id) == $buku->id ? 'selected' : '' }}>
-                        {{ $buku->judul_buku }} (Stok: {{ $buku->stok_jual }})
+                    <option value="{{ $buku->id }}"
+                        {{ old('buku_id', $pembeli->buku_id) == $buku->id ? 'selected' : '' }}>
+                        {{ $buaku->judul_buku }} (Stok tersedia: {{ $buku->stok_tersedia }})
                     </option>
                 @endforeach
             </select>
 
-            <input type="date" name="tanggal_pembelian" class="border p-2"
-                value="{{ old('tanggal_pembelian', $pembeli->tanggal_pembelian ? date('Y-m-d', strtotime($pembeli->tanggal_pembelian)) : '') }}" required>
+            <input type="number" name="jumlah" min="1" class="border p-2 rounded" placeholder="Jumlah"
+                value="{{ old('jumlah', $pembeli->stok_buku) }}" required>
+
+            <input type="date" name="tanggal_pembelian" class="border p-2 rounded"
+                value="{{ old('tanggal_pembelian', date('Y-m-d', strtotime($pembeli->tanggal_pembelian))) }}"
+                min="{{ date('Y-m-d') }}" onkeydown="return false" required>
+
         </div>
 
         <div class="flex justify-between mt-6">
