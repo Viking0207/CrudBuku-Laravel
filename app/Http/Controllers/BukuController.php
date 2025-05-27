@@ -21,7 +21,6 @@ class BukuController extends Controller
             'author' => 'required',
             'tahun' => 'required|digits:4|integer',
             'stok_buku' => 'nullable|integer',
-            'stok_jual' => 'nullable|integer',
             'kategori' => 'nullable|in:Fiksi,Nonfiksi,Komik,Pelajaran,Lainnya',
             'harga' => 'nullable|numeric',
         ]);
@@ -50,7 +49,6 @@ class BukuController extends Controller
             'author' => 'required',
             'tahun' => 'required|digits:4|integer',
             'stok_buku' => 'nullable|integer',
-            'stok_jual' => 'nullable|integer',
             'kategori' => 'nullable|in:Fiksi,Nonfiksi,Komik,Pelajaran,Lainnya',
             'harga' => 'nullable|numeric',
         ]);

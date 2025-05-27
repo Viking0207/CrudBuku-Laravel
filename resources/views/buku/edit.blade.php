@@ -32,8 +32,6 @@
                 value="{{ old('tahun', $buku->tahun) }}">
             <input type="number" name="stok_buku" placeholder="Stok Buku" class="border p-2"
                 value="{{ old('stok_buku', $buku->stok_buku) }}">
-            <input type="number" name="stok_jual" placeholder="Stok Jual" class="border p-2"
-                value="{{ old('stok_jual', $buku->stok_jual) }}">
             <select name="kategori" class="border p-2">
                 @foreach (['Fiksi', 'Nonfiksi', 'Komik', 'Pelajaran', 'Lainnya'] as $kategori)
                     <option value="{{ $kategori }}"

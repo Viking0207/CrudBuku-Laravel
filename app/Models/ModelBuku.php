@@ -14,7 +14,6 @@ class ModelBuku extends Model
         'author',
         'tahun',
         'stok_buku',
-        'stok_jual',
         'kategori',
         'harga',
     ];

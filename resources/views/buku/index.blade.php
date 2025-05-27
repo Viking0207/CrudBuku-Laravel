@@ -37,8 +37,6 @@
                 value="{{ old('tahun') }}">
             <input type="number" name="stok_buku" placeholder="Stok Buku" class="border p-2"
                 value="{{ old('stok_buku') }}">
-            <input type="number" name="stok_jual" placeholder="Stok Jual" class="border p-2"
-                value="{{ old('stok_jual') }}">
             <select name="kategori" class="border p-2">
                 <option value="Fiksi" {{ old('kategori') == 'Fiksi' ? 'selected' : '' }}>Fiksi</option>
                 <option value="Nonfiksi" {{ old('kategori') == 'Nonfiksi' ? 'selected' : '' }}>Nonfiksi</option>
@@ -62,7 +60,6 @@
                 <th class="py-2 px-3">Author</th>
                 <th class="py-2 px-3">Tahun</th>
                 <th class="py-2 px-3">Stok Buku</th>
-                <th class="py-2 px-3">Stok Jual</th>
                 <th class="py-2 px-3">Kategori</th>
                 <th class="py-2 px-3">Harga</th>
                 <th class="py-2 px-3">Aksi</th>
@@ -75,7 +72,6 @@
                     <td class="py-2 px-3">{{ $buku->author }}</td>
                     <td class="py-2 px-3">{{ $buku->tahun }}</td>
                     <td class="py-2 px-3">{{ $buku->stok_buku }}</td>
-                    <td class="py-2 px-3">{{ $buku->stok_jual }}</td>
                     <td class="py-2 px-3">{{ $buku->kategori }}</td>
                     <td class="py-2 px-3">Rp{{ number_format($buku->harga, 0, ',', '.') }}</td>
                     <td class="py-2 px-3 flex space-x-2">

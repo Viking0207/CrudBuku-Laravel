@@ -7,25 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ModelPembeli extends Model
 {
-      use HasFactory;
+    use HasFactory;
 
     protected $table = 'tb_pembeli';
 
     protected $fillable = [
         'nama',
-        'email',
         'buku_id',
+        'judul_buku',
         'kategori',
+        'stok_buku',
+        'harga',
         'tanggal_pembelian',
     ];
 
-    protected $casts = [
-        'tanggal_pembelian' => 'date',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
+    public $timestamps = true;
 
-    // Relasi ke buku
     public function buku()
     {
         return $this->belongsTo(ModelBuku::class, 'buku_id');

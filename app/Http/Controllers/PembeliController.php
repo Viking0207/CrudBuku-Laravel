@@ -5,65 +5,144 @@ namespace App\Http\Controllers;
 use App\Models\ModelPembeli;
 use App\Models\ModelBuku;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PembeliController extends Controller
 {
-     public function index()
+    public function index()
     {
-        $pembelis = ModelPembeli::with('buku')->latest()->paginate(10);
-        return view('pembelis.index', compact('pembelis'));
+        $pembelis = ModelPembeli::with('buku')->latest()->get();
+        $bukus = ModelBuku::all();
+
+        // Hitung stok tersedia untuk setiap buku
+        foreach ($bukus as $buku) {
+            $jumlah_terjual = DB::table('tb_pembeli')
+                ->where('buku_id', $buku->id)
+                ->sum('stok_buku');
+
+            $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
+        }
+
+        return view('pembeli.index', compact('pembelis', 'bukus'));
     }
 
     public function create()
     {
-        $bukuList = ModelBuku::all();
-        return view('pembelis.create', compact('bukuList'));
+        $bukus = ModelBuku::all();
+
+        foreach ($bukus as $buku) {
+            $jumlah_terjual = DB::table('tb_pembeli')
+                ->where('buku_id', $buku->id)
+                ->sum('stok_buku');
+
+            $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
+        }
+
+        return view('pembeli.create', compact('bukus'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'nullable|email|max:100',
+            'nama' => 'required|string|max:255',
             'buku_id' => 'required|exists:tb_buku,id',
-            'kategori' => 'required|in:Fiksi,Nonfiksi,Komik,Pelajaran,Lainnya',
+            'jumlah' => 'required|integer|min:1',
             'tanggal_pembelian' => 'required|date',
         ]);
 
-        ModelPembeli::create($request->all());
+        $buku = ModelBuku::findOrFail($request->buku_id);
 
-        return redirect()->route('pembelis.index')->with('success', 'Data pembeli berhasil disimpan.');
+        if ($request->jumlah > $buku->stok_buku) {
+            return back()->withErrors(['jumlah' => 'Jumlah melebihi stok yang tersedia!'])->withInput();
+        }
+
+        $total_harga = $buku->harga * $request->jumlah;
+
+        ModelPembeli::create([
+            'nama' => $request->nama,
+            'buku_id' => $buku->id,
+            'judul_buku' => $buku->judul_buku,
+            'kategori' => $buku->kategori,
+            'stok_buku' => $request->jumlah,
+            'harga' => $total_harga,
+            'tanggal_pembelian' => $request->tanggal_pembelian,
+        ]);
+
+        // Kurangi stok buku di tb_buku
+        $buku->stok_buku -= $request->jumlah;
+        $buku->save();
+
+        return redirect('/pembeli')->with('success', 'Data pembeli berhasil ditambahkan');
     }
 
-    public function show(ModelPembeli $pembeli)
+    public function edit($id)
     {
-        return view('pembelis.show', compact('pembeli'));
+        $pembeli = ModelPembeli::findOrFail($id);
+        $bukus = ModelBuku::all();
+
+        foreach ($bukus as $buku) {
+            $jumlah_terjual = DB::table('tb_pembeli')
+                ->where('buku_id', $buku->id)
+                ->where('id', '!=', $pembeli->id) // abaikan pembelian saat ini
+                ->sum('stok_buku');
+
+            $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
+        }
+
+        return view('pembeli.edit', compact('pembeli', 'bukus'));
     }
 
-    public function edit(ModelPembeli $pembeli)
-    {
-        $bukuList = ModelBuku::all();
-        return view('pembelis.edit', compact('pembeli', 'bukuList'));
-    }
-
-    public function update(Request $request, ModelPembeli $pembeli)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'nullable|email|max:100',
+            'nama' => 'required|string|max:255',
             'buku_id' => 'required|exists:tb_buku,id',
-            'kategori' => 'required|in:Fiksi,Nonfiksi,Komik,Pelajaran,Lainnya',
+            'jumlah' => 'required|integer|min:1',
             'tanggal_pembelian' => 'required|date',
         ]);
 
-        $pembeli->update($request->all());
+        $pembeli = ModelPembeli::findOrFail($id);
+        $buku = ModelBuku::findOrFail($request->buku_id);
 
-        return redirect()->route('pembelis.index')->with('success', 'Data pembeli berhasil diperbarui.');
+        // Tambahkan dulu stok lama kembali (rollback)
+        $buku->stok_buku += $pembeli->stok_buku;
+
+        // Cek apakah stok mencukupi untuk permintaan baru
+        if ($request->jumlah > $buku->stok_buku) {
+            return back()->withErrors(['jumlah' => 'Jumlah melebihi stok yang tersedia!'])->withInput();
+        }
+
+        $total_harga = $buku->harga * $request->jumlah;
+
+        // Update data pembeli
+        $pembeli->update([
+            'nama' => $request->nama,
+            'buku_id' => $buku->id,
+            'judul_buku' => $buku->judul_buku,
+            'kategori' => $buku->kategori,
+            'stok_buku' => $request->jumlah,
+            'harga' => $total_harga,
+            'tanggal_pembelian' => $request->tanggal_pembelian,
+        ]);
+
+        // Kurangi stok dengan jumlah baru
+        $buku->stok_buku -= $request->jumlah;
+        $buku->save();
+
+        return redirect('/pembeli')->with('success', 'Data pembeli berhasil diperbarui.');
     }
 
-    public function destroy(ModelPembeli $pembeli)
+    public function destroy($id)
     {
+        $pembeli = ModelPembeli::findOrFail($id);
+        $buku = ModelBuku::findOrFail($pembeli->buku_id);
+
+        // Tambahkan kembali stok buku
+        $buku->stok_buku += $pembeli->stok_buku;
+        $buku->save();
+
         $pembeli->delete();
-        return redirect()->route('pembelis.index')->with('success', 'Data pembeli berhasil dihapus.');
+
+        return redirect('/pembeli')->with('success', 'Data pembeli berhasil dihapus');
     }
 }
