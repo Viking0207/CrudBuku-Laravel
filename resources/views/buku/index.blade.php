@@ -2,92 +2,134 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Daftar Buku</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Font Awesome CDN --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-papbFNZ2VVJ1vbb7xy0s6S4/8LfGmXQKkLX2pO3DsmMjEi1H0l7dKm+e0Nxf2EwlIJsl3sxwl2QEtw3YuWtv/A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="p-6 bg-gray-100">
-    <h1 class="text-2xl font-bold mb-4">Tambah Buku</h1>
+<body class="p-8 bg-gradient-to-br from-blue-50 via-white to-blue-100 min-h-screen">
+    <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-8">
 
-    @if (session('success'))
-        <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
-            {{ session('success') }}
+        <!-- Judul dan Tombol Back -->
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-extrabold text-blue-900 flex items-center gap-3">
+                <i class="fa-solid fa-book-open"></i> Tambah Buku
+            </h1>
+            <a href="/"
+                class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-700 text-white px-5 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-sm">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+
+
         </div>
-    @endif
 
-    @if ($errors->any())
-        <div class="mb-4 p-3 bg-red-200 text-red-800 rounded">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        @if (session('success'))
+            <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded flex items-center gap-3">
+                <i class="fa-solid fa-circle-check text-green-600"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
 
-    <form action="/buku" method="POST" class="mb-8 bg-white p-6 rounded shadow">
-        @csrf
-        <div class="grid grid-cols-2 gap-4">
-            <input type="text" name="judul_buku" placeholder="Judul Buku" class="border p-2" required
-                value="{{ old('judul_buku') }}">
-            <input type="text" name="author" placeholder="Author" class="border p-2" required
-                value="{{ old('author') }}">
-            <input type="number" name="tahun" placeholder="Tahun" class="border p-2" required
-                value="{{ old('tahun') }}">
-            <input type="number" name="stok_buku" placeholder="Stok Buku" class="border p-2"
-                value="{{ old('stok_buku') }}">
-            <select name="kategori" class="border p-2">
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li><i class="fa-solid fa-exclamation-circle mr-1 text-red-600"></i>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="/buku" method="POST"
+            class="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6 bg-blue-50 p-6 rounded-lg shadow-inner">
+            @csrf
+            <input type="text" name="judul_buku" placeholder="Judul Buku"
+                class="border border-blue-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                required value="{{ old('judul_buku') }}" />
+            <input type="text" name="author" placeholder="Author"
+                class="border border-blue-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                required value="{{ old('author') }}" />
+            <input type="number" name="tahun" placeholder="Tahun" min="1900" max="{{ date('Y') }}"
+                class="border border-blue-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                required value="{{ old('tahun') }}" />
+            <input type="number" name="stok_buku" placeholder="Stok Buku" min="0"
+                class="border border-blue-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                value="{{ old('stok_buku') }}" />
+            <select name="kategori"
+                class="border border-blue-300 rounded px-4 py-2 bg-white focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 <option value="Fiksi" {{ old('kategori') == 'Fiksi' ? 'selected' : '' }}>Fiksi</option>
                 <option value="Nonfiksi" {{ old('kategori') == 'Nonfiksi' ? 'selected' : '' }}>Nonfiksi</option>
                 <option value="Komik" {{ old('kategori') == 'Komik' ? 'selected' : '' }}>Komik</option>
                 <option value="Pelajaran" {{ old('kategori') == 'Pelajaran' ? 'selected' : '' }}>Pelajaran</option>
-                <option value="Lainnya" {{ old('kategori', 'Lainnya') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                <option value="Lainnya" {{ old('kategori', 'Lainnya') == 'Lainnya' ? 'selected' : '' }}>Lainnya
+                </option>
             </select>
-            <input type="text" id="harga" placeholder="Harga" class="border p-2" oninput="formatRupiah(this)"
-                value="{{ old('harga') }}">
-            <input type="hidden" id="harga_hidden" name="harga_hidden" value="{{ old('harga_hidden') }}">
+            <div class="relative">
+                <input type="text" id="harga" placeholder="Harga (Rp)"
+                    class="border border-blue-300 rounded px-4 py-2 w-full pr-10 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                    oninput="formatRupiah(this)" value="{{ old('harga') }}" />
+                <i
+                    class="fa-solid fa-money-bill-wave absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"></i>
+                <input type="hidden" id="harga_hidden" name="harga_hidden" value="{{ old('harga_hidden') }}" />
+            </div>
+
+            <button type="submit"
+                class="md:col-span-2 bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded px-6 py-3 flex justify-center items-center gap-2 shadow-md">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan
+            </button>
+        </form>
+
+        <h2 class="text-2xl font-bold mb-4 text-blue-900 flex items-center gap-3">
+            <i class="fa-solid fa-list"></i> Daftar Buku
+        </h2>
+
+        <div class="overflow-x-auto rounded shadow">
+            <table class="min-w-full bg-white rounded border border-blue-200">
+                <thead class="bg-blue-100 text-blue-900 font-semibold">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Judul</th>
+                        <th class="py-3 px-4 text-left">Author</th>
+                        <th class="py-3 px-4 text-left">Tahun</th>
+                        <th class="py-3 px-4 text-left">Stok Buku</th>
+                        <th class="py-3 px-4 text-left">Kategori</th>
+                        <th class="py-3 px-4 text-left">Harga</th>
+                        <th class="py-3 px-4 text-left">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($bukus as $buku)
+                        <tr class="border-t hover:bg-blue-50 transition">
+                            <td class="py-2 px-4">{{ $buku->judul_buku }}</td>
+                            <td class="py-2 px-4">{{ $buku->author }}</td>
+                            <td class="py-2 px-4">{{ $buku->tahun }}</td>
+                            <td class="py-2 px-4">{{ $buku->stok_buku }}</td>
+                            <td class="py-2 px-4">{{ $buku->kategori }}</td>
+                            <td class="py-2 px-4">Rp{{ number_format($buku->harga, 0, ',', '.') }}</td>
+                            <td class="py-2 px-4 flex space-x-2">
+                                <a href="/buku/{{ $buku->id }}/edit" title="Edit Buku"
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded flex items-center gap-2 transition">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <form action="/buku/{{ $buku->id }}" method="POST"
+                                    onsubmit="return confirm('Yakin hapus?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded flex items-center gap-2 transition">
+                                        <i class="fa-solid fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
-    </form>
-
-    <h2 class="text-xl font-semibold mb-2">Daftar Buku</h2>
-
-    <table class="min-w-full bg-white rounded shadow">
-        <thead class="bg-gray-200 text-left">
-            <tr>
-                <th class="py-2 px-3">Judul</th>
-                <th class="py-2 px-3">Author</th>
-                <th class="py-2 px-3">Tahun</th>
-                <th class="py-2 px-3">Stok Buku</th>
-                <th class="py-2 px-3">Kategori</th>
-                <th class="py-2 px-3">Harga</th>
-                <th class="py-2 px-3">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($bukus as $buku)
-                <tr class="border-t">
-                    <td class="py-2 px-3">{{ $buku->judul_buku }}</td>
-                    <td class="py-2 px-3">{{ $buku->author }}</td>
-                    <td class="py-2 px-3">{{ $buku->tahun }}</td>
-                    <td class="py-2 px-3">{{ $buku->stok_buku }}</td>
-                    <td class="py-2 px-3">{{ $buku->kategori }}</td>
-                    <td class="py-2 px-3">Rp{{ number_format($buku->harga, 0, ',', '.') }}</td>
-                    <td class="py-2 px-3 flex space-x-2">
-                        <a href="/buku/{{ $buku->id }}/edit"
-                            class="bg-yellow-400 text-white px-2 py-1 rounded">Edit</a>
-                        <form action="/buku/{{ $buku->id }}" method="POST"
-                            onsubmit="return confirm('Yakin hapus?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="bg-red-500 text-white px-2 py-1 rounded" type="submit">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </div>
 
     <script>
         function formatRupiah(input) {
@@ -103,7 +145,7 @@
         }
 
         // Auto-format kalau ada value lama
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             let inputHarga = document.getElementById('harga');
             if (inputHarga.value) {
                 formatRupiah(inputHarga);
