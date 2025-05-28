@@ -5,9 +5,7 @@
     <meta charset="UTF-8" />
     <title>Edit Data Pembeli</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-papbZU1Lc+KXdTQK++TGqQhNjdQcSAt8mglpyC1bY5JkFp9ip6O+8hCbQ7j3TfJyZ14RY1J8U1pi1LxU8ew0Kg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
 
 <body class="p-6 bg-gray-100 font-sans">
@@ -76,7 +74,7 @@
 
         <div class="flex items-center justify-between mt-8">
             <a href="/pembeli"
-                class="inline-flex items-center px-7 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 hover:border-gray-500 hover:text-gray-900 transition duration-200 font-medium select-none">
+                class="inline-flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 hover:border-gray-500 hover:text-gray-900 transition duration-200 font-medium select-none">
                 <i class="fa-solid fa-times"></i> Batal
             </a>
             <button type="submit"

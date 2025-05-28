@@ -5,9 +5,7 @@
     <meta charset="UTF-8" />
     <title>Edit Buku</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-papbZU1Lc+KXdTQK++TGqQhNjdQcSAt8mglpyC1bY5JkFp9ip6O+8hCbQ7j3TfJyZ14RY1J8U1pi1LxU8ew0Kg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
 
 <body class="p-6 bg-gray-100 font-sans">

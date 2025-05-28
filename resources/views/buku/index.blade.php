@@ -6,9 +6,7 @@
     <title>Daftar Buku</title>
     <script src="https://cdn.tailwindcss.com"></script>
     {{-- Font Awesome CDN --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-papbFNZ2VVJ1vbb7xy0s6S4/8LfGmXQKkLX2pO3DsmMjEi1H0l7dKm+e0Nxf2EwlIJsl3sxwl2QEtw3YuWtv/A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
 
 <body class="p-8 bg-gradient-to-br from-blue-50 via-white to-blue-100 min-h-screen">
@@ -119,7 +117,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded flex items-center gap-2 transition">
+                                        class="bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded flex items-center gap-2">
                                         <i class="fa-solid fa-trash"></i> Hapus
                                     </button>
                                 </form>
