@@ -14,7 +14,7 @@ class PembeliController extends Controller
     public function index()
     {
         $pembelis = ModelPembeli::with('buku')->latest()->get();
-        $bukus = ModelBuku::all();  
+        $bukus = ModelBuku::all();
         $users = ModelUser::all();
 
         // Hitung stok tersedia untuk setiap buku
@@ -42,18 +42,19 @@ class PembeliController extends Controller
             $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
         }
 
-        return view('pembeli.create', compact('bukus'));
+        return view('pembeli.create', compact('bukus', 'users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'user_id' => 'required|exists:tb_user,id',
             'buku_id' => 'required|exists:tb_buku,id',
             'jumlah' => 'required|integer|min:1',
             'tanggal_pembelian' => 'required|date',
         ]);
 
+        $user = ModelUser::findOrFail($request->user_id);
         $buku = ModelBuku::findOrFail($request->buku_id);
 
         if ($request->jumlah > $buku->stok_buku) {
@@ -63,8 +64,8 @@ class PembeliController extends Controller
         $total_harga = $buku->harga * $request->jumlah;
 
         ModelPembeli::create([
-            'user_id' => Auth::id(),
-            'nama' => $request->nama,
+            'user_id' => $user->id,
+            'nama' => $user->nama,
             'buku_id' => $buku->id,
             'judul_buku' => $buku->judul_buku,
             'kategori' => $buku->kategori,
@@ -95,13 +96,13 @@ class PembeliController extends Controller
             $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
         }
 
-        return view('pembeli.edit', compact('pembeli', 'bukus'));
+        return view('pembeli.edit', compact('pembeli', 'bukus', 'users'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'user_id' => 'required|exists:tb_user,id',
             'buku_id' => 'required|exists:tb_buku,id',
             'jumlah' => 'required|integer|min:1',
             'tanggal_pembelian' => 'required|date',
@@ -109,6 +110,7 @@ class PembeliController extends Controller
 
         $pembeli = ModelPembeli::findOrFail($id);
         $buku = ModelBuku::findOrFail($request->buku_id);
+        $user = ModelUser::findOrFail($request->user_id);
 
         // Tambahkan dulu stok lama kembali (rollback)
         $buku->stok_buku += $pembeli->stok_buku;
@@ -122,8 +124,8 @@ class PembeliController extends Controller
 
         // Update data pembeli
         $pembeli->update([
-            'user_id' => Auth::id(),
-            'nama' => $request->nama,
+            'user_id' => $user->id,
+            'nama' => $user->nama,
             'buku_id' => $buku->id,
             'judul_buku' => $buku->judul_buku,
             'kategori' => $buku->kategori,
