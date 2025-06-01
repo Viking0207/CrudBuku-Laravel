@@ -12,6 +12,7 @@ class ModelPembeli extends Model
     protected $table = 'tb_pembeli';
 
     protected $fillable = [
+        'user_id',
         'nama',
         'buku_id',
         'judul_buku',
@@ -26,5 +27,10 @@ class ModelPembeli extends Model
     public function buku()
     {
         return $this->belongsTo(ModelBuku::class, 'buku_id');
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo(ModelUser::class, 'user_id');
     }
 }

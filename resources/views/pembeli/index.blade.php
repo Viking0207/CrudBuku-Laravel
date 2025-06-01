@@ -52,9 +52,16 @@
                     <label for="nama" class="block mb-1 font-semibold text-indigo-700 flex items-center gap-2">
                         <i class="fa-solid fa-user"></i> Nama Pembeli
                     </label>
-                    <input type="text" id="nama" name="nama" placeholder="Masukkan nama pembeli"
-                        class="w-full border border-indigo-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                        required value="{{ old('nama') }}">
+                    <select id="user_id" name="user_id"
+                        class="w-full border border-indigo-300 rounded-md p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        required>
+                        <option value="">-- Pilih User --</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                {{ $user->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="relative">

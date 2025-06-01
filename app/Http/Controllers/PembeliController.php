@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\ModelPembeli;
 use App\Models\ModelBuku;
+use App\Models\ModelUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PembeliController extends Controller
 {
     public function index()
     {
         $pembelis = ModelPembeli::with('buku')->latest()->get();
-        $bukus = ModelBuku::all();
+        $bukus = ModelBuku::all();  
+        $users = ModelUser::all();
 
         // Hitung stok tersedia untuk setiap buku
         foreach ($bukus as $buku) {
@@ -23,12 +26,13 @@ class PembeliController extends Controller
             $buku->stok_tersedia = $buku->stok_buku - $jumlah_terjual;
         }
 
-        return view('pembeli.index', compact('pembelis', 'bukus'));
+        return view('pembeli.index', compact('pembelis', 'bukus', 'users'));
     }
 
     public function create()
     {
         $bukus = ModelBuku::all();
+        $users = ModelUser::all();
 
         foreach ($bukus as $buku) {
             $jumlah_terjual = DB::table('tb_pembeli')
@@ -59,6 +63,7 @@ class PembeliController extends Controller
         $total_harga = $buku->harga * $request->jumlah;
 
         ModelPembeli::create([
+            'user_id' => Auth::id(),
             'nama' => $request->nama,
             'buku_id' => $buku->id,
             'judul_buku' => $buku->judul_buku,
@@ -79,6 +84,7 @@ class PembeliController extends Controller
     {
         $pembeli = ModelPembeli::findOrFail($id);
         $bukus = ModelBuku::all();
+        $users = ModelUser::all();
 
         foreach ($bukus as $buku) {
             $jumlah_terjual = DB::table('tb_pembeli')
@@ -116,6 +122,7 @@ class PembeliController extends Controller
 
         // Update data pembeli
         $pembeli->update([
+            'user_id' => Auth::id(),
             'nama' => $request->nama,
             'buku_id' => $buku->id,
             'judul_buku' => $buku->judul_buku,
