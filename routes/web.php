@@ -10,9 +10,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+// Dashboard user biasa, hanya untuk user yang sudah login dan status 'user'
+Route::get('/dashboard', [UserController::class, 'userDashboard'])->name('dashboard');
+
+// Dashboard admin, hanya untuk admin yang sudah login dan status 'admin'
+Route::get('/admin/dashboard', [UserController::class, 'adminDashboard'])->name('admin.dashboard');
+
 
 Route::get('/login', [UserController::class, 'showLogin'])->name('login');
 Route::post('/login', [UserController::class, 'login']);
