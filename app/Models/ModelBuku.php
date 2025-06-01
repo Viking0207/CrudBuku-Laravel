@@ -16,6 +16,7 @@ class ModelBuku extends Model
         'stok_buku',
         'kategori',
         'harga',
+        'gambar',
     ];
 
     // Timestamps default true, gak perlu ditulis kalau gak diubah

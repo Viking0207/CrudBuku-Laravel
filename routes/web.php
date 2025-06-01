@@ -26,10 +26,11 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/buku', [BukuController::class, 'index']);
-Route::post('/buku', [BukuController::class, 'store']);
-Route::get('/buku/{id}/edit', [BukuController::class, 'edit']);
-Route::put('/buku/{id}', [BukuController::class, 'update']);
-Route::delete('/buku/{id}', [BukuController::class, 'destroy']);
+Route::get('/admin/buku', [BukuController::class, 'admin']);
+Route::post('/admin/buku', [BukuController::class, 'store']);
+Route::get('/admin/buku/{id}/edit', [BukuController::class, 'edit']);
+Route::put('/admin/buku/{id}', [BukuController::class, 'update']);
+Route::delete('/admin/buku/{id}', [BukuController::class, 'destroy']);
 
 Route::get('/pembeli', [PembeliController::class, 'index']);
 Route::get('/pembeli/create', [PembeliController::class, 'create']);

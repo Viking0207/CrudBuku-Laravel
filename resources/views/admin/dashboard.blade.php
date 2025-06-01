@@ -46,7 +46,7 @@
             <p class="text-lg text-gray-600">Silakan pilih salah satu menu di bawah ini untuk melanjutkan.</p>
 
             <div class="grid md:grid-cols-2 gap-6 mt-6">
-                <a href="/buku"
+                <a href="/admin/buku"
                     class="group bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl shadow-lg text-xl font-semibold flex items-center justify-center gap-3 transition-transform duration-300 hover:-translate-y-1">
                     <i class="fa-solid fa-book group-hover:animate-pulse"></i>
                     Daftar Buku

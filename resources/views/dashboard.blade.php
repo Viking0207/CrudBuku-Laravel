@@ -39,12 +39,12 @@
             <a href="/buku"
                 class="group bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl shadow-lg text-xl font-semibold flex items-center justify-center gap-3 transition-transform duration-300 hover:-translate-y-1">
                 <i class="fa-solid fa-book group-hover:animate-pulse"></i>
-                Daftar Buku
+                Kumpulan Buku
             </a>
             <a href="/pembeli"
                 class="group bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-xl shadow-lg text-xl font-semibold flex items-center justify-center gap-3 transition-transform duration-300 hover:-translate-y-1">
-                <i class="fa-solid fa-user-group group-hover:animate-pulse"></i>
-                Daftar Pembeli
+                <i class="fa-solid fa-cart-shopping group-hover:animate-pulse"></i>
+                Beli buku
             </a>
         </div>
     </div>
