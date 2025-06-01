@@ -18,7 +18,7 @@
                 <span>Form Pembelian Buku</span>
             </h1>
 
-            <a href="/"
+            <a href="/dashboard"
                 class="inline-flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-sm transition duration-200 text-sm font-semibold">
                 <i class="fa-solid fa-arrow-left text-base"></i> Kembali
             </a>

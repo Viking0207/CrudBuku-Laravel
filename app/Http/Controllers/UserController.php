@@ -2,91 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ModelUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ModelUser;
 
 class UserController extends Controller
-{  
-    // Tampilkan semua user
-    public function index()
+{
+    // Tampilkan form login
+    public function showLogin()
     {
-        $users = ModelUser::with('pembelis')->get();
-        return view('users.index', compact('users'));
+        return view('auth.login');
     }
 
-    // Form tambah user baru
-    public function create()
-    {
-        return view('users.create');
-    }
-
-    // Simpan user baru
-    public function store(Request $request)
+    // Proses login manual tanpa Auth
+    public function login(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:200',
-            'email' => 'required|email|unique:tb_user,email',
-            'password' => 'required|string|min:6|confirmed',
-            'status' => 'required|in:admin,user',
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        ModelUser::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status' => $request->status,
-        ]);
+        $user = ModelUser::where('email', $request->email)
+            ->where('password', $request->password) // langsung bandingkan teks
+            ->first();
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dibuat.');
-    }
+        if ($user) {
+            session([
+                'user_id' => $user->id,
+                'user_nama' => $user->nama,
+                'user_email' => $user->email,
+                'user_status' => $user->status,
+            ]);
 
-    // Tampilkan detail user
-    public function show($id)
-    {
-        $user = ModelUser::with('pembelis')->findOrFail($id);
-        return view('users.show', compact('user'));
-    }
-
-    // Form edit user
-    public function edit($id)
-    {
-        $user = ModelUser::findOrFail($id);
-        return view('users.edit', compact('user'));
-    }
-
-    // Update user
-    public function update(Request $request, $id)
-    {
-        $user = ModelUser::findOrFail($id);
-
-        $request->validate([
-            'nama' => 'required|string|max:200',
-            'email' => 'required|email|unique:tb_user,email,'.$user->id,
-            'password' => 'nullable|string|min:6|confirmed',
-            'status' => 'required|in:admin,user',
-        ]);
-
-        $user->nama = $request->nama;
-        $user->email = $request->email;
-        $user->status = $request->status;
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            return redirect('/dashboard');
         }
 
-        $user->save();
-
-        return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
+        return back()->withErrors(['email' => 'Email atau password salah.']);
     }
 
-    // Hapus user
-    public function destroy($id)
+    // Tampilkan form register
+    public function showRegister()
     {
-        $user = ModelUser::findOrFail($id);
-        $user->delete();
+        return view('auth.register');
+    }
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+    // Proses register manual tanpa Auth
+    public function register(Request $request)
+    {
+        $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:tb_user,email'],
+            'password' => ['required', 'confirmed', 'min:6'],
+        ]);
+
+        $user = ModelUser::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'password' => $request->password, // langsung simpan apa adanya
+            'status' => 'user',
+        ]);
+
+        session([
+            'user_id' => $user->id,
+            'user_nama' => $user->nama,
+            'user_email' => $user->email,
+            'user_status' => $user->status,
+        ]);
+
+        return redirect('/login');
+    }
+
+
+    // Logout manual
+    public function logout(Request $request)
+    {
+        // Bersihkan session yang berhubungan dengan user
+        $request->session()->forget(['user_id', 'user_nama', 'user_email', 'user_status']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }
-

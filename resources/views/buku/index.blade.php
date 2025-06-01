@@ -17,7 +17,7 @@
             <h1 class="text-3xl font-extrabold text-blue-900 flex items-center gap-3">
                 <i class="fa-solid fa-book-open"></i> Tambah Buku
             </h1>
-            <a href="/"
+            <a href="/dashboard"
                 class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-700 text-white px-5 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-sm">
                 <i class="fa-solid fa-arrow-left"></i> Kembali
             </a>
