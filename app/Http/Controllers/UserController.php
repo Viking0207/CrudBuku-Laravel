@@ -32,6 +32,7 @@ class UserController extends Controller
                 'user_nama' => $user->nama,
                 'user_email' => $user->email,
                 'user_status' => $user->status,
+                'user' => $user
             ]);
 
             return redirect('/dashboard');
@@ -80,6 +81,7 @@ class UserController extends Controller
         $request->session()->forget(['user_id', 'user_nama', 'user_email', 'user_status']);
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        $request->session()->flush();
 
         return redirect('/');
     }

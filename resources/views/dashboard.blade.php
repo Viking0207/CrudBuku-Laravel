@@ -6,12 +6,30 @@
     <title>Perpus Utama</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 
-<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-200 min-h-screen flex items-center justify-center font-sans">
+<body class="relative overflow-hidden bg-gradient-to-br from-blue-100 via-purple-100 to-pink-200 min-h-screen flex items-center justify-center font-sans">
 
-    <div class="bg-white max-w-3xl w-full p-10 rounded-2xl shadow-2xl text-center space-y-8">
+    <!-- Bar atas: Nama user dan tombol logout -->
+    <div class="absolute top-6 right-6 flex items-center gap-3 animate__animated animate__fadeInDown">
+        <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-md border border-gray-200">
+            <i class="fa-solid fa-user text-indigo-500"></i>
+            <span class="text-sm font-semibold text-gray-800">
+                {{ session('user')->nama ?? 'User' }}
+            </span>
+        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit"
+                class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl text-sm font-medium shadow-md transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </button>
+        </form>
+    </div>
+
+    <!-- Konten utama -->
+    <div class="bg-white max-w-3xl w-full p-10 rounded-2xl shadow-2xl text-center space-y-8 animate__animated animate__fadeInUp">
         <h1 class="text-4xl font-extrabold text-gray-800 flex justify-center items-center gap-3">
             <i class="fa-solid fa-building-columns text-indigo-600"></i> Welcome To Perpus
         </h1>
