@@ -109,4 +109,78 @@ class UserController extends Controller
 
         return redirect('/');
     }
+
+
+
+      // List semua user
+    public function index()
+    {
+        $users = ModelUser::all();
+        return view('admin.userdata.index', compact('users'));
+    }
+
+    // Tampilkan form tambah user
+    public function create()
+    {
+        return view('admin.userdata.create');
+    }
+
+    // Simpan data user baru
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:tb_user,email',
+            'password' => 'required|min:6',
+            'status' => 'required|in:user,admin',
+        ]);
+
+        ModelUser::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'password' => $request->password,  // kalau mau hashing nanti bisa ubah
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.userdata.index')->with('success', 'User berhasil ditambah');
+    }
+
+    // Tampilkan form edit user
+    public function edit($id)
+    {
+        $user = ModelUser::findOrFail($id);
+        return view('admin.userdata.edit', compact('user'));
+    }
+
+    // Update data user
+    public function update(Request $request, $id)
+    {
+        $user = ModelUser::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:tb_user,email,' . $user->id,
+            'password' => 'nullable|min:6',
+            'status' => 'required|in:user,admin',
+        ]);
+
+        $user->nama = $request->nama;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = $request->password;
+        }
+        $user->status = $request->status;
+        $user->save();
+
+        return redirect()->route('admin.userdata.index')->with('success', 'User berhasil diupdate');
+    }
+
+    // Hapus user
+    public function destroy($id)
+    {
+        $user = ModelUser::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('admin.userdata.index')->with('success', 'User berhasil dihapus');
+    }
 }

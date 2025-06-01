@@ -37,3 +37,10 @@ Route::post('/pembeli', [PembeliController::class, 'store']);
 Route::get('/pembeli/{id}/edit', [PembeliController::class, 'edit']);
 Route::put('/pembeli/{id}', [PembeliController::class, 'update']);
 Route::delete('/pembeli/{id}', [PembeliController::class, 'destroy']);
+
+Route::get('/users', [UserController::class, 'index'])->name('admin.userdata.index');    
+Route::get('/users/create', [UserController::class, 'create'])->name('admin.userdata.create');
+Route::post('/users', [UserController::class, 'store'])->name('admin.userdata.store');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.userdata.edit');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.userdata.update');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.userdata.destroy');
